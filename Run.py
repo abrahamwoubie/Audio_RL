@@ -2,11 +2,11 @@ import os, sys, random, operator
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Train_Agent import Agent
-from Environment import Env
+from Agent import Agent
+from Environment import Environment
 
 # Settings
-env = Env(Ny=8, Nx=8)
+env = Environment(nRow=8, nCol=8)
 agent = Agent(env)
 
 number_of_iterations_per_episode=[]
@@ -25,10 +25,10 @@ for episode in range(N_episodes):
     iteration=0
     while iteration < 100:
         iteration+=1
+        iter_episode += 1
         action = agent.get_action(env)  # get action
         state_next, reward, done = env.step(action)  # evolve state by action
         agent.train((state, action, state_next, reward, done))  # train agent
-        iter_episode += 1
         reward_episode += reward
         if done:
             break

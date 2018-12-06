@@ -22,10 +22,12 @@ class Agent:
             # explore
             return np.random.choice(env.allowed_actions())
         else:
-            # exploit on allowed actions
+
+        # exploit on allowed actions
             state = env.state;
             actions_allowed = env.allowed_actions()
             Q_s = self.Q[state[0], state[1], actions_allowed]
+            #print("q[s]",self.Q[state[0], state[1], actions_allowed])
             actions_greedy = actions_allowed[np.flatnonzero(Q_s == np.max(Q_s))]
             return np.random.choice(actions_greedy)
 
@@ -50,5 +52,4 @@ class Agent:
             for y in range(self.state_dim[1]):
                 greedy_policy[y, x] = np.argmax(self.Q[y, x, :])
         print("\nGreedy policy(y, x):")
-        print(greedy_policy)
         print()
