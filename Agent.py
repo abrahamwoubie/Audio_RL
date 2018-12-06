@@ -51,7 +51,6 @@ class Agent:
         greedy_policy = np.zeros((self.state_dim[0], self.state_dim[1]), dtype=int)
         for x in range(self.state_dim[0]):
             for y in range(self.state_dim[1]):
-                print(self.Q[y, x, :])
                 greedy_policy[y, x] = np.argmax(self.Q[y, x, :])
         print("\nGreedy policy(y, x):")
         print(greedy_policy)

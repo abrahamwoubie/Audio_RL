@@ -24,8 +24,8 @@ from Agent import Agent
 
 """
 
-nRow=4
-nCol=4
+nRow=3
+nCol=3
 
 class Environment:
     
@@ -85,8 +85,8 @@ class Environment:
 
     def _build_rewards(self):
         # Define agent rewards R[s,a]
-        reward_goal = 100  # reward for arriving at terminal state (bottom-right corner)
-        reward_no_goal = -1  # penalty for not reaching terminal state
+        reward_goal = 1  # reward for arriving at terminal state (bottom-right corner)
+        reward_no_goal = 0  # penalty for not reaching terminal state
         R = reward_no_goal * np.ones(self.state_dim + self.action_dim, dtype=float)  # R[s,a]
         R[self.nRow - 2, self.nCol - 1, self.action_dict["down"]] = reward_goal  # arrive from above
         R[self.nRow - 1, self.nCol - 2, self.action_dict["right"]] = reward_goal  # arrive from the left
