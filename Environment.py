@@ -2,27 +2,13 @@ import os, sys, random, operator
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Train_Agent import Agent
+from Agent import Agent
 
 
 
 """
 
- gridworld.py 
-
- We use Q-learning to train an epsilon-greedy agent to find the shortest path 
- between position (0, 0) to opposing corner (Ny-1, Nx-1) of a 2D rectangular grid
- in the 2D GridWorld environment of size (Ny, Nx).
-
- Note: 
- The optimal policy exists but is a highly degenerate solution because
- of the multitude of ways one can traverse down the grid in the minimum
- number of steps. Therefore a greedy policy that always moves the agent closer 
- towards the goal can be considered an optimal policy (can get to the goal 
- in `Ny + Nx - 2` actions). In our example, this corresponds to actions 
- of moving right or down to the bottom-right corner.
-
- Example optimal policy:
+ Example
  
   [[1 1 1 1 1 2]
   [1 1 1 1 1 2]
@@ -38,13 +24,13 @@ from Train_Agent import Agent
 
 """
 
-class Env:
+class Environment:
     
-    def __init__(self, Ny=8, Nx=8):
+    def __init__(self, nRow=4, nCol=4):
         # Define state space
-        self.Ny = Ny  # y grid size
-        self.Nx = Nx  # x grid size
-        self.state_dim = (Ny, Nx)
+        self.nRow = nRow  # x grid size
+        self.nCol = nCol  # y grid size
+        self.state_dim = (nRow, nCol)
         # Define action space
         self.action_dim = (4,)  # up, right, down, left
         self.action_dict = {"up": 0, "right": 1, "down": 2, "left": 3}
@@ -65,9 +51,11 @@ class Env:
         state_next = (self.state[0] + self.action_coords[action][0],
                       self.state[1] + self.action_coords[action][1])
         # Collect reward
-        reward = self.R[self.state + (action,)]
-        # Terminate if we reach bottom-right grid corner
-        done = (state_next[0] == self.Ny - 1) and (state_next[1] == self.Nx - 1)
+        reward = self.R[self.state + (action,)] #  state(0,0) and action (1,)=>(0,0,1)
+
+        # Terminate if we reach bottom-r
+        # right grid corner
+        done = (state_next[0] == self.nRow - 1) and (state_next[1] == self.nCol - 1)
         # Update state
         self.state = state_next
         return state_next, reward, done
@@ -75,23 +63,27 @@ class Env:
     def allowed_actions(self):
         # Generate list of actions allowed depending on agent grid location
         actions_allowed = []
-        y, x = self.state[0], self.state[1]
-        if (y > 0):  # no passing top-boundary
+        row, col = self.state[0], self.state[1]
+        #print("y",self.state[0])
+        #print("x", self.state[1])
+        if (row > 0):  # no passing top-boundary
             actions_allowed.append(self.action_dict["up"])
-        if (y < self.Ny - 1):  # no passing bottom-boundary
+        if (row < self.nRow - 1):  # no passing bottom-boundary
             actions_allowed.append(self.action_dict["down"])
-        if (x > 0):  # no passing left-boundary
+        if (col > 0):  # no passing left-boundary
             actions_allowed.append(self.action_dict["left"])
-        if (x < self.Nx - 1):  # no passing right-boundary
+        if (col < self.nCol - 1):  # no passing right-boundary
             actions_allowed.append(self.action_dict["right"])
         actions_allowed = np.array(actions_allowed, dtype=int)
+        #print("actions allowed",actions_allowed)
         return actions_allowed
 
     def _build_rewards(self):
         # Define agent rewards R[s,a]
-        r_goal = 1  # reward for arriving at terminal state (bottom-right corner)
-        r_nongoal = 0  # penalty for not reaching terminal state
+        r_goal = 100  # reward for arriving at terminal state (bottom-right corner)
+        r_nongoal = -1  # penalty for not reaching terminal state
         R = r_nongoal * np.ones(self.state_dim + self.action_dim, dtype=float)  # R[s,a]
-        R[self.Ny - 2, self.Nx - 1, self.action_dict["down"]] = r_goal  # arrive from above
-        R[self.Ny - 1, self.Nx - 2, self.action_dict["right"]] = r_goal  # arrive from the left
+
+        R[self.nRow - 2, self.nCol - 1, self.action_dict["down"]] = r_goal  # arrive from above
+        R[self.nRow - 1, self.nCol - 2, self.action_dict["right"]] = r_goal  # arrive from the left
         return R
