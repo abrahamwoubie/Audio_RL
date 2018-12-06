@@ -80,10 +80,9 @@ class Environment:
 
     def _build_rewards(self):
         # Define agent rewards R[s,a]
-        r_goal = 100  # reward for arriving at terminal state (bottom-right corner)
-        r_nongoal = -1  # penalty for not reaching terminal state
-        R = r_nongoal * np.ones(self.state_dim + self.action_dim, dtype=float)  # R[s,a]
-
-        R[self.nRow - 2, self.nCol - 1, self.action_dict["down"]] = r_goal  # arrive from above
-        R[self.nRow - 1, self.nCol - 2, self.action_dict["right"]] = r_goal  # arrive from the left
+        reward_goal = 100  # reward for arriving at terminal state (bottom-right corner)
+        reward_no_goal = -1  # penalty for not reaching terminal state
+        R = reward_no_goal * np.ones(self.state_dim + self.action_dim, dtype=float)  # R[s,a]
+        R[self.nRow - 2, self.nCol - 1, self.action_dict["down"]] = reward_goal  # arrive from above
+        R[self.nRow - 1, self.nCol - 2, self.action_dict["right"]] = reward_goal  # arrive from the left
         return R
