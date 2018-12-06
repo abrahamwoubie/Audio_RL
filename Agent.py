@@ -44,12 +44,15 @@ class Agent:
         (state, action, state_next, reward, done) = memory
         sa = state + (action,)
         self.Q[sa] += self.beta * (reward + self.gamma * np.max(self.Q[state_next]) - self.Q[sa])
+        #print("Q[sa] {} is sa {} ".format(self.Q[sa],sa))
 
     def display_greedy_policy(self):
         # greedy policy = argmax[a'] Q[s,a']
         greedy_policy = np.zeros((self.state_dim[0], self.state_dim[1]), dtype=int)
         for x in range(self.state_dim[0]):
             for y in range(self.state_dim[1]):
+                print(self.Q[y, x, :])
                 greedy_policy[y, x] = np.argmax(self.Q[y, x, :])
         print("\nGreedy policy(y, x):")
+        print(greedy_policy)
         print()

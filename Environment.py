@@ -24,9 +24,12 @@ from Agent import Agent
 
 """
 
+nRow=4
+nCol=4
+
 class Environment:
     
-    def __init__(self, nRow=4, nCol=4):
+    def __init__(self, nRow, nCol):
         # Define state space
         self.nRow = nRow  # x grid size
         self.nCol = nCol  # y grid size
@@ -43,7 +46,9 @@ class Environment:
 
     def reset(self):
         # Reset agent state to top-left grid corner
-        self.state = (0, 0)  
+        start_row=random.choice(range(0,nRow-1))
+        start_col=random.choice(range(0,nCol-1))
+        self.state = (start_row, start_col)
         return self.state
 
     def step(self, action):
