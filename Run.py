@@ -15,7 +15,7 @@ number_of_episodes=[]
 
 # Train agent
 print("\nTraining agent...\n")
-N_episodes = 2000
+N_episodes =2000
 reward_List=[]
 for episode in range(N_episodes):
 
