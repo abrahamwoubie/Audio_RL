@@ -2,6 +2,7 @@ import os, sys, random, operator
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Agent:
 
     def __init__(self, env):
@@ -14,7 +15,9 @@ class Agent:
         self.beta = 0.99  # learning rate
         self.gamma = 0.99  # reward discount factor
         # Initialize Q[s,a] table
-        self.Q = np.zeros(self.state_dim + self.action_dim, dtype=float)
+        #self.Q = np.zeros(self.state_dim + self.action_dim, dtype=float)
+        self.Q=np.zeros([16,4])
+
 
     def get_action(self, env):
         # Epsilon-greedy agent policy
@@ -26,7 +29,7 @@ class Agent:
         # exploit on allowed actions
             state = env.state;
             actions_allowed = env.allowed_actions()
-            Q_s = self.Q[state[0], state[1], actions_allowed]
+            Q_s = self.Q[state[0]*4+state[1], actions_allowed]
             #print("q[s]",self.Q[state[0], state[1], actions_allowed])
             actions_greedy = actions_allowed[np.flatnonzero(Q_s == np.max(Q_s))]
             return np.random.choice(actions_greedy)
@@ -42,18 +45,22 @@ class Agent:
         #  gamma = discount factor
         # -----------------------------
         (state, action, state_next, reward, done) = memory
-        sa = state + (action,)
-        self.Q[sa] += self.beta * (reward + self.gamma * np.max(self.Q[state_next]) - self.Q[sa])
+        print("Memory",memory)
+        #sa = state + (action,)
+        #self.Q[sa] += self.beta * (reward + self.gamma * np.max(self.Q[state_next]) - self.Q[sa])
+        self.Q[state,action]+=self.beta * (reward + self.gamma * np.max(self.Q[state_next,:]) - self.Q[state,action])
+        #Q[s, a] = Q[s, a] + lr * (r + y * np.max(Q[s1, :]) - Q[s, a])
+        #print("Q[state,action]",self.Q[state,action])
         #print("Q[sa] {} is sa {} ".format(self.Q[sa],sa))
 
-    def display_greedy_policy(self):
-        # greedy policy = argmax[a'] Q[s,a']
-        greedy_policy = np.zeros((self.state_dim[0], self.state_dim[1]), dtype=int)
-        print(self.Q)
-        for x in range(self.state_dim[0]):
-            for y in range(self.state_dim[1]):
-                #print(self.Q[y, x, :])
-                greedy_policy[y, x] = np.argmax(self.Q[y, x, :])
-        print("\nGreedy policy(y, x):")
-        print(greedy_policy)
-        print()
+    # def display_greedy_policy(self):
+    #     # greedy policy = argmax[a'] Q[s,a']
+    #     greedy_policy = np.zeros((self.state_dim[0], self.state_dim[1]), dtype=int)
+    #     print(self.Q)
+    #     for x in range(self.state_dim[0]):
+    #         for y in range(self.state_dim[1]):
+    #             #print(self.Q[y, x, :])
+    #             greedy_policy[y, x] = np.argmax(self.Q[y, x, :])
+    #     print("\nGreedy policy(y, x):")
+    #     print(greedy_policy)
+    #     print()

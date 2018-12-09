@@ -15,27 +15,34 @@ number_of_episodes=[]
 
 # Train agent
 print("\nTraining agent...\n")
-N_episodes =2000
+N_episodes =100
 reward_List=[]
 for episode in range(N_episodes):
 
     # Generate an episode
     reward_episode = 0
-
-    state = env.reset()  # starting state
+    state,goal_state = env.reset()  # starting state
+    state = state[0] * nRow + state[1]
+    #print("Start State at Iteration {} is {}".format(episode, state))
+    #print("Goal State at Iteration {} is {}".format(episode,goal_state))
     #while True:
+    #print("State at Episode {} is {}".format(episode,state))
     number_of_episodes.append(episode)
     iteration=0
     while iteration < 100:
         iteration+=1
+        #print("Current State is ",state)
         action = agent.get_action(env)  # get action
+        #print("Action",action)
         state_next, reward, done = env.step(action)  # evolve state by action
+        state_next=state_next[0]*nRow+state_next[1]
+        #print("Next state is ",state_next)
         agent.train((state, action, state_next, reward, done))  # train agent
         reward_episode += reward
         if done:
             break
         state = state_next  # transition to next state
-
+        #print("Done",done)
     # Decay agent exploration parameter
     agent.epsilon = max(agent.epsilon * agent.epsilon_decay, 0.01)
 
@@ -48,8 +55,8 @@ for episode in range(N_episodes):
             episode + 1, N_episodes, iteration, reward_episode))
 
     # Print greedy policy
-    if (episode == N_episodes - 1):
-        agent.display_greedy_policy()
+    # if (episode == N_episodes - 1):
+    #     agent.display_greedy_policy()
         # for (key, val) in sorted(env.action_dict.items(), key=operator.itemgetter(1)):
         #     print(" action['{}'] = {}".format(key, val))
         # print()
