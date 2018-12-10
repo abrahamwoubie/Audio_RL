@@ -27,8 +27,8 @@ from scipy.spatial import  distance
 
 """
 
-nRow=4
-nCol=4
+nRow=6
+nCol=6
 
 class Environment:
     

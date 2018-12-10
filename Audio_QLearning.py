@@ -8,7 +8,7 @@ from Environment import *
 
 # Settings
 env = Environment(nRow, nCol)
-agent = Agent(env)
+agent = Agent(env,nRow,nCol)
 
 number_of_iterations_per_episode=[]
 number_of_episodes=[]
@@ -32,7 +32,7 @@ for episode in range(N_episodes):
     while iteration < 100:
         iteration+=1
         #print("Current State is ",state)
-        action = agent.get_action(env)  # get action
+        action = agent.get_action(env,nRow,nCol)  # get action
         #print("Action",action)
         state_next, reward, done = env.step(action)  # evolve state by action
         state_next=state_next[0]*nRow+state_next[1]
